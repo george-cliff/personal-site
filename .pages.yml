@@ -1,0 +1,16 @@
+﻿media:
+  input: public/images
+  output: /images
+
+content:
+  - name: blog
+    label: Blog
+    type: collection
+    path: src/content/blog
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    fields:
+      - name: title
+        type: string
+      - name: body
+        type: rich-text
