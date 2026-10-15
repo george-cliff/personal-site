@@ -6,7 +6,6 @@ import icon from 'astro-icon';
 
 export default defineConfig({
   site: 'https://george-cliff.github.io',
-  base: '/personal-site',
   integrations: [
     expressiveCode(),
     mdx(),
