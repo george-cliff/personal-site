@@ -16,6 +16,7 @@ Treat the **current repository** as the source of truth. Check the relevant sour
 - **Islands only when needed:** Hydrate a UI-framework component only when its interactivity warrants it. For small interactions, prefer native browser features or focused vanilla JavaScript.
 - **Reuse before creating:** Follow existing patterns and extend components where it reduces meaningful duplication. Avoid speculative component systems.
 - **Accessible and responsive:** Use semantic HTML, keyboard-operable controls, visible focus states, appropriate labels, and reduced-motion support.
+- **Colour through tokens:** Use the semantic `--color-*` roles from `src/styles/colours.css`; never hard-code colours or use raw palette shades in components. Keep the interface neutral and use accents only as `docs/design-system.md` describes.
 - **Keep the site lightweight:** Prefer existing packages and browser capabilities. Optimise assets where relevant; avoid premature optimisation.
 
 ## Making changes
