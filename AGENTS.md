@@ -1,22 +1,36 @@
-## Development
+# Agent guidance — georgecliff.com
 
-When starting the dev server, use background mode:
+This file contains standing instructions for coding agents working on this repository. Keep it short and stable. Project status, task lists, design exploration, and implementation details belong elsewhere.
 
-```
-astro dev --background
-```
+## Project
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+georgecliff.com is a personal website built with Astro. It combines technical projects and writing. Its deployment model is a statically generated site; preserve that architecture unless a change is explicitly agreed.
 
-## Documentation
+Treat the **current repository** as the source of truth. Check the relevant source files, configuration, package scripts, and existing components before making assumptions. Do not rely on outdated plans or nonexistent documentation paths.
 
-Full documentation: https://docs.astro.build
+## Engineering principles
 
-Consult these guides before working on related tasks:
+- **KISS:** Prefer the simplest solution that meets the requirement. Do not add abstractions, dependencies, or infrastructure without a concrete need.
+- **Astro-first:** Prefer native `.astro` components, layouts, content collections, and build-time rendering.
+- **Static by default:** Deliver HTML and CSS without client-side JavaScript where possible. Preserve progressive enhancement.
+- **Islands only when needed:** Hydrate a UI-framework component only when its interactivity warrants it. For small interactions, prefer native browser features or focused vanilla JavaScript.
+- **Reuse before creating:** Follow existing patterns and extend components where it reduces meaningful duplication. Avoid speculative component systems.
+- **Accessible and responsive:** Use semantic HTML, keyboard-operable controls, visible focus states, appropriate labels, and reduced-motion support.
+- **Keep the site lightweight:** Prefer existing packages and browser capabilities. Optimise assets where relevant; avoid premature optimisation.
 
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+## Making changes
+
+1. Inspect the relevant code and understand the existing behaviour before editing.
+2. Make the smallest coherent change that satisfies the request. Avoid unrelated refactoring or redesign.
+3. Preserve established routes, content, styling, and working features unless the task calls for changing them.
+4. Follow the project's existing formatting, naming, TypeScript, CSS, and content conventions. Use content collections rather than duplicating authored content in components.
+5. If a proposed change would alter the site's architecture, introduce a major dependency, or break compatibility, explain the trade-off before proceeding.
+6. Respect uncommitted work. Never discard changes, stage files, or create commits unless explicitly asked.
+
+## Before finishing
+
+- Run the relevant checks available in the repository (at minimum, the production build for changes affecting the site), where feasible.
+- Check the affected pages and responsive behaviour when UI is changed.
+- Report what changed, what was verified, and any known limitations. Do not claim checks passed unless they were run.
+
+Keep this file focused on **how agents should work**. Do not append temporary tasks, progress updates, feature backlogs, or session-specific instructions.
