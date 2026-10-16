@@ -3,18 +3,22 @@
  * Source: georgecliff-palette-v0.2 kit, adopted unchanged as v1.0. The OKLCH
  * values are authoritative; the HEX comments are approximate sRGB equivalents.
  *
- * Two layers:
+ * Four layers:
  *   1. Palette: 5 families × 11 shades (50–950). Raw values only. Components
  *      should not use these directly.
  *   2. Semantic: --color-* roles, mapped to palette shades per mode. Components
  *      use only these, so palette changes stay in this file.
+ *   3. Contextual: --color-section-* per site section, and --color-section for
+ *      the current page.
+ *   4. Status: --status-{success,warning,info,error}-{fg,bg,border}, for
+ *      functional feedback only.
  *
- * The UI is neutral (Paper / Graphite). Violet is not a primary colour. The four
- * accent families are for selective, contextual use via --color-accent-*.
+ * The UI is neutral (Paper / Graphite). No accent is a universal primary: each
+ * of the four marks a site section and is used selectively.
  * Usage rules: docs/design-system.md.
  *
- * Mode: follows prefers-color-scheme unless <html data-theme="light|dark"> is
- * set. BaseLayout syncs data-theme with the header's dark mode toggle.
+ * Mode: <html data-theme="light|dark">, which BaseLayout sets (dark unless the
+ * header toggle saved light). Without it (no JavaScript), prefers-color-scheme.
  */
 
 :root {
@@ -93,6 +97,7 @@
   --color-text-muted: var(--paper-graphite-700); /* secondary text and metadata */
   --color-border: var(--paper-graphite-300); /* dividers and outlines */
   --color-link: var(--paper-graphite-900);
+  --color-link-hover: var(--paper-graphite-950);
   --color-interactive: var(--paper-graphite-950); /* filled controls, selection */
   --color-on-interactive: var(--paper-graphite-50); /* text on --color-interactive */
   --color-accent-violet: var(--violet-700); /* Home, global identity */
@@ -106,6 +111,33 @@
   --color-signature-teal: var(--teal-500);
   --color-signature-copper: var(--copper-500);
   --color-signature-rose: var(--rose-500);
+  /* Stronger accent (hover text) and accent tint (hover backgrounds). */
+  --color-accent-violet-strong: var(--violet-900);
+  --color-accent-teal-strong: var(--teal-900);
+  --color-accent-copper-strong: var(--copper-900);
+  --color-accent-rose-strong: var(--rose-900);
+  --color-accent-violet-tint: var(--violet-100);
+  --color-accent-teal-tint: var(--teal-100);
+  --color-accent-copper-tint: var(--copper-100);
+  --color-accent-rose-tint: var(--rose-100);
+  /* Brand exception: LinkedIn blue, adjusted per mode for contrast. */
+  --color-social-linkedin: #0a66c2;
+  /* Semantic status colours: feedback only (success, warning, info, error),
+     never section identity or decoration. Defined directly in OKLCH, without
+     full scales. Hues kept apart from the accents: forest green, golden ochre,
+     muted blue, brick red. */
+  --status-success-fg: oklch(46% 0.1 145);
+  --status-success-bg: oklch(96% 0.03 145);
+  --status-success-border: oklch(62% 0.1 145);
+  --status-warning-fg: oklch(48% 0.1 78);
+  --status-warning-bg: oklch(96% 0.045 92);
+  --status-warning-border: oklch(66% 0.12 82);
+  --status-info-fg: oklch(47% 0.11 252);
+  --status-info-bg: oklch(95.5% 0.016 252);
+  --status-info-border: oklch(64% 0.1 252);
+  --status-error-fg: oklch(48% 0.14 27);
+  --status-error-bg: oklch(95.5% 0.02 25);
+  --status-error-border: oklch(62% 0.14 27);
 }
 
 /* Explicit light choice wins over a dark OS preference. */
@@ -124,6 +156,7 @@
   --color-text-muted: var(--paper-graphite-300);
   --color-border: var(--paper-graphite-700);
   --color-link: var(--paper-graphite-100);
+  --color-link-hover: var(--paper-graphite-50);
   --color-interactive: var(--paper-graphite-50);
   --color-on-interactive: var(--paper-graphite-950);
   --color-accent-violet: var(--violet-300);
@@ -135,6 +168,30 @@
   --color-signature-teal: var(--teal-400);
   --color-signature-copper: var(--copper-400);
   --color-signature-rose: var(--rose-400);
+  /* Stronger accent (hover text) and accent tint (hover backgrounds). */
+  --color-accent-violet-strong: var(--violet-200);
+  --color-accent-teal-strong: var(--teal-200);
+  --color-accent-copper-strong: var(--copper-200);
+  --color-accent-rose-strong: var(--rose-200);
+  --color-accent-violet-tint: var(--violet-900);
+  --color-accent-teal-tint: var(--teal-900);
+  --color-accent-copper-tint: var(--copper-900);
+  --color-accent-rose-tint: var(--rose-900);
+  /* Brand exception: LinkedIn blue, adjusted per mode for contrast. */
+  --color-social-linkedin: #70b5f9;
+  /* Semantic status colours (dark). */
+  --status-success-fg: oklch(82% 0.1 145);
+  --status-success-bg: oklch(30% 0.045 145);
+  --status-success-border: oklch(56% 0.09 145);
+  --status-warning-fg: oklch(86% 0.13 98);
+  --status-warning-bg: oklch(31% 0.05 90);
+  --status-warning-border: oklch(62% 0.11 92);
+  --status-info-fg: oklch(82% 0.08 252);
+  --status-info-bg: oklch(30% 0.045 252);
+  --status-info-border: oklch(57% 0.09 252);
+  --status-error-fg: oklch(80% 0.1 27);
+  --status-error-bg: oklch(30% 0.06 27);
+  --status-error-border: oklch(58% 0.12 27);
 }
 
 /* No explicit choice: follow the OS preference. */
@@ -149,6 +206,7 @@
     --color-text-muted: var(--paper-graphite-300);
     --color-border: var(--paper-graphite-700);
     --color-link: var(--paper-graphite-100);
+    --color-link-hover: var(--paper-graphite-50);
     --color-interactive: var(--paper-graphite-50);
     --color-on-interactive: var(--paper-graphite-950);
     --color-accent-violet: var(--violet-300);
@@ -160,7 +218,72 @@
     --color-signature-teal: var(--teal-400);
     --color-signature-copper: var(--copper-400);
     --color-signature-rose: var(--rose-400);
+    /* Stronger accent (hover text) and accent tint (hover backgrounds). */
+    --color-accent-violet-strong: var(--violet-200);
+    --color-accent-teal-strong: var(--teal-200);
+    --color-accent-copper-strong: var(--copper-200);
+    --color-accent-rose-strong: var(--rose-200);
+    --color-accent-violet-tint: var(--violet-900);
+    --color-accent-teal-tint: var(--teal-900);
+    --color-accent-copper-tint: var(--copper-900);
+    --color-accent-rose-tint: var(--rose-900);
+    /* Brand exception: LinkedIn blue, adjusted per mode for contrast. */
+    --color-social-linkedin: #70b5f9;
+    /* Semantic status colours (dark). */
+    --status-success-fg: oklch(82% 0.1 145);
+    --status-success-bg: oklch(30% 0.045 145);
+    --status-success-border: oklch(56% 0.09 145);
+    --status-warning-fg: oklch(86% 0.13 98);
+    --status-warning-bg: oklch(31% 0.05 90);
+    --status-warning-border: oklch(62% 0.11 92);
+    --status-info-fg: oklch(82% 0.08 252);
+    --status-info-bg: oklch(30% 0.045 252);
+    --status-info-border: oklch(57% 0.09 252);
+    --status-error-fg: oklch(80% 0.1 27);
+    --status-error-bg: oklch(30% 0.06 27);
+    --status-error-border: oklch(58% 0.12 27);
   }
+}
+
+/* Contextual section accents. --color-section-<name> is each section's accent.
+   --color-section (with -strong and -tint) follows the nearest data-section:
+   <html> for the current page (set by BaseLayout), or an element inside it,
+   such as a nav item or a homepage block. Default: Home's Violet. All of these
+   follow the mode through the accent roles above. */
+:root {
+  --color-section-home: var(--color-accent-violet);
+  --color-section-projects: var(--color-accent-teal);
+  --color-section-writing: var(--color-accent-copper);
+  --color-section-about: var(--color-accent-rose);
+
+  /* Social badges: GitHub neutral, Email Violet, LinkedIn (above) its brand blue. */
+  --color-social-github: var(--color-text);
+  --color-social-email: var(--color-accent-violet);
+}
+
+:root,
+[data-section="home"] {
+  --color-section: var(--color-accent-violet);
+  --color-section-strong: var(--color-accent-violet-strong);
+  --color-section-tint: var(--color-accent-violet-tint);
+}
+
+[data-section="projects"] {
+  --color-section: var(--color-accent-teal);
+  --color-section-strong: var(--color-accent-teal-strong);
+  --color-section-tint: var(--color-accent-teal-tint);
+}
+
+[data-section="writing"] {
+  --color-section: var(--color-accent-copper);
+  --color-section-strong: var(--color-accent-copper-strong);
+  --color-section-tint: var(--color-accent-copper-tint);
+}
+
+[data-section="about"] {
+  --color-section: var(--color-accent-rose);
+  --color-section-strong: var(--color-accent-rose-strong);
+  --color-section-tint: var(--color-accent-rose-tint);
 }
 
 /* Third-party: Accessible Astro Launcher derives its light/dark colours from
