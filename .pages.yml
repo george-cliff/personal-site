@@ -1,12 +1,12 @@
-﻿media:
+media:
   input: public/images
   output: /images
 
 content:
-  - name: blog
-    label: Blog
+  - name: devlog
+    label: Devlog
     type: collection
-    path: src/content/blog
+    path: src/content/devlog
     format: yaml-frontmatter
     filename: "{primary}.md"
     fields:
