@@ -1,10 +1,11 @@
 ---
 import { Image } from 'astro:assets';
-import type { Project } from '../../data/projects';
+import { projectUrl, type Project } from '../../data/projects';
 
 type Props = Project;
 
-const { title, description, href, image, meta } = Astro.props;
+const { title, description, image, meta } = Astro.props;
+const href = projectUrl(Astro.props);
 ---
 
 <!-- The title link stretches over the whole card; the image is moved above it visually only. -->
