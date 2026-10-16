@@ -1,8 +1,11 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import FormattedDate from '../../components/ui/FormattedDate.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getDevlogPosts } from '../../lib/devlog';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('devlog');
+  const posts = await getDevlogPosts();
 
   return posts.map((post) => ({
     params: { id: post.id },
@@ -14,9 +17,14 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<a href="/devlog/">Back to devlog</a>
-<h1>{post.data.title}</h1>
+<BaseLayout title={post.data.title}>
+  <a href="/devlog/">Back to devlog</a>
+  <h1>{post.data.title}</h1>
+  {post.data.pubDate && (
+    <p><FormattedDate date={post.data.pubDate} /></p>
+  )}
 
-<article>
-  <Content />
-</article>
+  <article>
+    <Content />
+  </article>
+</BaseLayout>

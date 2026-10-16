@@ -12,5 +12,9 @@ content:
     fields:
       - name: title
         type: string
+        required: true
+      - name: pubDate
+        label: Publication date
+        type: date
       - name: body
         type: rich-text

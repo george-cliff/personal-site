@@ -1,15 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
+import PostList from '../../components/devlog/PostList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getDevlogPosts } from '../../lib/devlog';
 
-const posts = await getCollection('devlog');
+const posts = await getDevlogPosts();
 ---
 
-<h1>Devlog</h1>
-
-<ul>
-  {posts.map((post) => (
-    <li>
-      <a href={`/devlog/${post.id}/`}>{post.data.title}</a>
-    </li>
-  ))}
-</ul>
+<BaseLayout title="Devlog">
+  <h1>Devlog</h1>
+  <PostList posts={posts} />
+</BaseLayout>

@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from '../ui/FormattedDate.astro';
+
+interface Props {
+  posts: CollectionEntry<'devlog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+{posts.length > 0 ? (
+  <ul class="posts">
+    {posts.map((post) => (
+      <li>
+        <a href={`/devlog/${post.id}/`}>{post.data.title}</a>
+        {post.data.pubDate && <FormattedDate date={post.data.pubDate} />}
+      </li>
+    ))}
+  </ul>
+) : (
+  <p>No posts yet.</p>
+)}
+
+<style>
+  .posts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    padding-block: 0.75rem;
+  }
+
+  li + li {
+    border-top: 1px solid var(--color-border);
+  }
+
+  a {
+    font-weight: bold;
+    text-underline-offset: 0.2em;
+  }
+
+  li :global(time) {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+</style>
