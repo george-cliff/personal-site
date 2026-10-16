@@ -23,6 +23,10 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Browser UI tint (e.g. mobile address bar): Violet, the global identity
+         colour, in both modes. Meta tags can't read CSS variables, so this is
+         --violet-700 from src/styles/colours.css; keep the two in step. -->
+    <meta name="theme-color" content="#5E409D" />
     <title>{pageTitle}</title>
     {description && <meta name="description" content={description} />}
     <script is:inline>
@@ -47,7 +51,9 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     <div class="shell">
       <div class="sidebar">
         <MainNav />
-        <div class="signature-sidebar">
+        <!-- Decorative: the site name is already in the header and title. -->
+        <div class="sidebar-identity" aria-hidden="true">
+          <p class="site-label">georgecliff.com</p>
           <ColourSignature />
         </div>
       </div>
@@ -221,10 +227,16 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     border-top: 1px solid var(--color-border);
   }
 
-  /* One colour signature shows at a time: in the footer on mobile,
-     at the foot of the sidebar from tablet up. */
-  .signature-sidebar {
+  /* One colour signature shows at a time: in the footer on mobile, at the
+     foot of the sidebar (under the site label) from tablet up. */
+  .sidebar-identity {
     display: none;
+  }
+
+  .site-label {
+    margin: 0 0 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
   }
 
   .signature-footer {
@@ -251,7 +263,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
       border-right: 1px solid var(--color-border);
     }
 
-    .signature-sidebar {
+    .sidebar-identity {
       display: block;
       margin-top: auto;
     }
