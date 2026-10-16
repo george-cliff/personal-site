@@ -2,49 +2,170 @@
 import { Icon } from 'astro-icon/components';
 import { links } from './navigation';
 
-// Normalise so '/devlog' and '/devlog/' match the same link.
+// Normalise so '/writing' and '/writing/' match the same link.
 const path = Astro.url.pathname.endsWith('/')
   ? Astro.url.pathname
   : `${Astro.url.pathname}/`;
 
 // 'page' for the exact page, 'true' for its section on nested pages.
-function current(href: string) {
+// `exact` is for flyout links that repeat their parent's link, e.g. "All writing".
+function current(href: string, exact = false) {
   if (path === href) return 'page';
-  if (href !== '/' && path.startsWith(href)) return 'true';
+  if (!exact && href !== '/' && path.startsWith(href)) return 'true';
   return undefined;
 }
 ---
 
-<nav aria-label="Main">
-  <ul>
-    {links.map(({ label, href, icon }) => (
-      <li>
-        <a href={href} aria-current={current(href)}>
-          <Icon name={icon} class="icon" aria-hidden="true" />
-          {label}
-        </a>
-      </li>
-    ))}
+{/*
+  Links with children get a flyout: it opens on hover (desktop) or with the
+  toggle button beside the link (keyboard and touch). The parent link still
+  navigates. The script below adds the toggle behaviour; without it, hover
+  still works and every flyout page is reachable from its parent page.
+*/}
+<nav class="main-nav" aria-label="Main">
+  <ul class="list">
+    {links.map(({ label, href, icon, mobileIconOnly, children }) => {
+      const flyoutId = `nav-${label.toLowerCase()}`;
+      const childCurrent = children?.some((child) => current(child.href, child.href === href));
+
+      return (
+        <li class:list={['item', { 'has-flyout': children }]}>
+          <a
+            class:list={['link', { 'icon-only': mobileIconOnly }]}
+            href={href}
+            aria-current={current(href) ?? (childCurrent ? 'true' : undefined)}
+          >
+            <Icon name={icon} class="icon" aria-hidden="true" />
+            <span class="label">{label}</span>
+          </a>
+          {children && (
+            <>
+              <button class="toggle" type="button" aria-expanded="false" aria-controls={flyoutId}>
+                <Icon name="tabler:chevron-right" class="chevron" aria-hidden="true" />
+                <span class="visually-hidden">{label} pages</span>
+              </button>
+              <div class="flyout" id={flyoutId}>
+                <ul class="panel">
+                  {children.map((child) => (
+                    <li>
+                      <a class="link" href={child.href} aria-current={current(child.href, child.href === href)}>
+                        <Icon name={child.icon} class="icon" aria-hidden="true" />
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+        </li>
+      );
+    })}
   </ul>
 </nav>
 
+<script>
+  const nav = document.querySelector<HTMLElement>('.main-nav');
+  const items = [...(nav?.querySelectorAll<HTMLElement>('.has-flyout') ?? [])];
+  const toggleOf = (item: HTMLElement) => item.querySelector<HTMLButtonElement>('.toggle')!;
+  const flyoutOf = (item: HTMLElement) => item.querySelector<HTMLElement>('.flyout')!;
+
+  // Lets a long flyout scroll instead of running off the bottom of the viewport.
+  function fit(item: HTMLElement) {
+    const flyout = flyoutOf(item);
+    flyout.style.setProperty('--flyout-top', `${flyout.getBoundingClientRect().top}px`);
+  }
+
+  function setOpen(item: HTMLElement, open: boolean) {
+    item.classList.toggle('open', open);
+    toggleOf(item).setAttribute('aria-expanded', String(open));
+    if (open) fit(item);
+  }
+
+  // Closes the flyout, and keeps it closed while the pointer is still over it.
+  function dismiss(item: HTMLElement) {
+    setOpen(item, false);
+    item.classList.add('dismissed');
+  }
+
+  function closeOthers(item: HTMLElement) {
+    items.forEach((other) => other !== item && setOpen(other, false));
+  }
+
+  nav?.classList.add('enhanced');
+
+  for (const item of items) {
+    toggleOf(item).addEventListener('click', () => {
+      closeOthers(item);
+      if (item.classList.contains('open')) {
+        dismiss(item);
+      } else {
+        item.classList.remove('dismissed');
+        setOpen(item, true);
+      }
+    });
+
+    // Hover is CSS-only; these keep it in step with flyouts opened by the toggle.
+    item.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      closeOthers(item);
+      fit(item);
+    });
+
+    item.addEventListener('pointerleave', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      item.classList.remove('dismissed');
+      if (!item.querySelector(':focus-visible')) setOpen(item, false);
+    });
+
+    item.addEventListener('focusout', (event) => {
+      if (!item.contains(event.relatedTarget as Node | null)) setOpen(item, false);
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    for (const item of items) {
+      if (!item.classList.contains('open') && !item.matches(':hover')) continue;
+      const hadFocus = flyoutOf(item).contains(document.activeElement);
+      dismiss(item);
+      if (hadFocus) toggleOf(item).focus();
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    for (const item of items) {
+      if (!item.contains(event.target as Node)) setOpen(item, false);
+    }
+  });
+</script>
+
 <style>
-  /* Mobile: one horizontally scrolling row. Desktop: a vertical list. */
+  /* Mobile: one horizontally scrolling row, flyouts drop down below it.
+     Desktop: a vertical list, flyouts open to the right of the sidebar. */
   ul {
-    display: flex;
-    gap: 0.25rem;
     margin: 0;
     padding: 0;
-    overflow-x: auto;
     list-style: none;
   }
 
-  a {
+  .list {
     display: flex;
+    gap: 0.125rem;
+    overflow-x: auto;
+  }
+
+  .item {
+    display: flex;
+  }
+
+  .link {
+    display: flex;
+    flex: 1;
     align-items: center;
     gap: 0.75rem;
     min-height: 2.75rem;
-    padding-inline: 0.75rem;
+    padding-inline: 0.5rem;
     border: 1px solid transparent;
     border-radius: 0.5rem;
     color: inherit;
@@ -53,17 +174,18 @@ function current(href: string) {
     white-space: nowrap;
   }
 
-  a:hover {
+  .link:hover {
     text-decoration: underline;
   }
 
-  a[aria-current] {
+  .link[aria-current] {
     border-color: var(--color-border);
     font-weight: bold;
   }
 
   /* Inset so the outline isn't clipped by the scrolling list. */
-  a:focus-visible {
+  .link:focus-visible,
+  .toggle:focus-visible {
     outline-offset: -2px;
   }
 
@@ -74,14 +196,148 @@ function current(href: string) {
     flex-shrink: 0;
   }
 
+  /* Mobile only: the icon stands in for the label, e.g. Home. */
+  @media (max-width: 47.99rem) {
+    .icon-only {
+      justify-content: center;
+      min-width: 2.75rem;
+    }
+
+    .icon-only .icon {
+      display: block;
+    }
+
+    .icon-only .label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  /* Hidden, but still taking up its space, until the script makes it work. */
+  .toggle {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    visibility: hidden;
+  }
+
+  .enhanced .toggle {
+    visibility: visible;
+  }
+
+  .toggle:hover,
+  .toggle[aria-expanded='true'] {
+    border-color: var(--color-border);
+  }
+
+  /* Points down on mobile, right on desktop. */
+  .chevron {
+    width: 1.25em;
+    height: 1.25em;
+    transform: rotate(90deg);
+  }
+
+  /* Positioned against the sticky sidebar on mobile, so the scrolling row doesn't clip it.
+     Hidden flyouts can't be focused or read, like display: none, but visibility
+     can be delayed: a hovered flyout closes after a moment, so the pointer can
+     cut across the next item on its way into it. */
+  .flyout {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    visibility: hidden;
+    transition: visibility 0s 0.25s;
+  }
+
+  .open > .flyout,
+  .flyout:focus-within {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .dismissed > .flyout {
+    transition: none;
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-height: calc(100dvh - var(--flyout-top, 0px) - 1rem);
+    padding: 0.5rem;
+    overflow-y: auto;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .panel .icon {
+    display: block;
+  }
+
   @media (min-width: 48rem) {
-    ul {
+    .list {
       flex-direction: column;
+      gap: 0.25rem;
       overflow-x: visible;
     }
 
-    .icon {
+    .item {
+      position: relative;
+    }
+
+    .link {
+      padding-inline: 0.75rem;
+    }
+
+    .toggle {
+      width: 2.75rem;
+    }
+
+    .icon,
+    .chevron {
       display: block;
+    }
+
+    .chevron {
+      transform: none;
+    }
+
+    /* The transparent left padding bridges the gap to the sidebar's edge,
+       so the pointer can move across without the flyout closing. */
+    .flyout {
+      top: calc(-0.25rem - 1px);
+      right: auto;
+      left: 100%;
+      padding-left: calc(1rem + 1px + 0.25rem);
+    }
+
+    .panel {
+      min-width: 12rem;
+      padding: 0.25rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+    }
+  }
+
+  /* A short delay before opening, so passing over an item doesn't open it. */
+  @media (min-width: 48rem) and (hover: hover) {
+    .item:hover:not(.dismissed) > .flyout {
+      visibility: visible;
+      transition-delay: 0.1s;
     }
   }
 </style>

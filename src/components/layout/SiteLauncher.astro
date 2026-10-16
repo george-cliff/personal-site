@@ -1,12 +1,12 @@
 ---
 import { Launcher, LauncherLink, LauncherNav, LauncherPreferences, LauncherSwitch } from 'accessible-astro-launcher';
 import { Icon } from 'astro-icon/components';
-import { launcherId, links } from './navigation';
+import { launcherId, pages } from './navigation';
 ---
 
 <Launcher id={launcherId} labels={{ placeholder: 'Search pages…' }}>
   <LauncherNav label="Pages">
-    {links.map(({ label, href, icon }) => (
+    {pages.map(({ label, href, icon }) => (
       <LauncherLink label={label} href={href}>
         <Icon slot="icon" name={icon} aria-hidden="true" />
       </LauncherLink>
