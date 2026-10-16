@@ -30,7 +30,7 @@ Tablet is the sidebar layout at a narrower page width. There is no collapsed (ic
 
 ## Colour system
 
-**Implemented.** Colour system v0.2, five families × 11 shades (50–950), 55 OKLCH tokens. The authoritative values are in [`src/styles/colours.css`](../src/styles/colours.css), imported once by the shared layout. Change colours there, not in components.
+**Implemented.** Colour system v1.0 (the v0.2 kit's values, adopted unchanged), five families × 11 shades (50–950), 55 OKLCH tokens. The authoritative values are in [`src/styles/colours.css`](../src/styles/colours.css), imported once by the shared layout. Change colours there, not in components.
 
 | Family           | Responsibility                  |
 | :--------------- | :------------------------------ |
@@ -85,6 +85,9 @@ Checked against WCAG AA for every text pairing the site uses. Lowest values: mut
 | Projects and project pages             | Teal   |
 | Writing and articles                   | Copper |
 | About, CV and Contact                  | Rose   |
+| Colophon                               | Violet |
+
+Anything without a clear section defaults to **Violet**, the global identity colour.
 
 Rules:
 
@@ -108,6 +111,5 @@ Today the active navigation item is neutral (border, page-colour fill and bold t
 ## Open
 
 - Font roles: Iosevka, Iosevka Aile and Iosevka Etoile are available; which does what is undecided.
-- Section identity implementation (above), including which accent, if any, the Colophon uses (it sits outside the navigation).
-- Light/dark `theme-color` values for the browser UI.
-- The palette is v0.2, a working direction rather than final.
+- Section identity implementation (above).
+- Browser theme colour: an optional `<meta name="theme-color">` would tint mobile browser UI, such as the address bar, to match the page in each mode. Not decided.
