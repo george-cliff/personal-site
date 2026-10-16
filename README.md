@@ -25,6 +25,10 @@ src/
   components/layout/
     navigation.ts      Sidebar and launcher links
     MainNav.astro      Sidebar navigation and flyouts
+  components/ui/
+    ColourSignature.astro  Four-colour signature
+  layouts/BaseLayout.astro  Shared page shell and theme script
+  styles/colours.css   Colour palette and semantic tokens
   lib/writing.ts       getPosts() and postUrl()
   pages/
     writing/[...category].astro       /writing/ and /writing/<category>/
@@ -33,6 +37,16 @@ src/
     projects/[id].astro               /projects/<id>/
     about.astro, cv.astro, contact.astro
 ```
+
+## Design
+
+**Tactile · Expressive · Editorial**: a considered architectural studio on the outside, a curious, expressive workshop inside. The interface is warm and neutral (Paper / Graphite); four accent families (Violet, Teal, Copper, Rose) are used selectively, because colour should indicate context, not decorate everything.
+
+- Colours live in `src/styles/colours.css`. Components use its semantic `--color-*` roles, never raw palette shades or hard-coded values.
+- Light and dark mode follow the system setting, and the header toggle overrides it.
+- Below 768px the navigation is a top bar; from 768px up it's a sidebar.
+
+See [docs/design-system.md](docs/design-system.md) for the colour system, layouts, section identity and four-colour signature, including what's agreed but not yet built.
 
 ## Writing
 

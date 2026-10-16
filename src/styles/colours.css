@@ -11,6 +11,7 @@
  *
  * The UI is neutral (Paper / Graphite). Violet is not a primary colour. The four
  * accent families are for selective, contextual use via --color-accent-*.
+ * Usage rules: docs/design-system.md.
  *
  * Mode: follows prefers-color-scheme unless <html data-theme="light|dark"> is
  * set. BaseLayout syncs data-theme with the header's dark mode toggle.
@@ -94,10 +95,10 @@
   --color-link: var(--paper-graphite-900);
   --color-interactive: var(--paper-graphite-950); /* filled controls, selection */
   --color-on-interactive: var(--paper-graphite-50); /* text on --color-interactive */
-  --color-accent-violet: var(--violet-700); /* expressive */
-  --color-accent-teal: var(--teal-800); /* technical, projects */
-  --color-accent-copper: var(--copper-700); /* warmth, annotations */
-  --color-accent-rose: var(--rose-800); /* personality */
+  --color-accent-violet: var(--violet-700); /* Home, global identity */
+  --color-accent-teal: var(--teal-800); /* Projects */
+  --color-accent-copper: var(--copper-700); /* Writing */
+  --color-accent-rose: var(--rose-800); /* About */
   --color-focus: var(--paper-graphite-950); /* focus indicators */
   /* Four-colour signature motif: decorative blocks, so mid shades rather than
      the text-contrast accents above. Fixed order: violet, teal, copper, rose. */
