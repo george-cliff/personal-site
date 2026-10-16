@@ -292,3 +292,23 @@
   --launcher-theme-light: var(--paper-graphite-50);
   --launcher-theme-dark: var(--paper-graphite-950);
 }
+
+/* Third-party: Accessible Astro toasts read --color-<type>-{bg,border,text}.
+   Point them at the site's status tokens, and default toasts at the neutrals. */
+:root {
+  --color-success-bg: var(--status-success-bg);
+  --color-success-border: var(--status-success-border);
+  --color-success-text: var(--status-success-fg);
+  --color-warning-bg: var(--status-warning-bg);
+  --color-warning-border: var(--status-warning-border);
+  --color-warning-text: var(--status-warning-fg);
+  --color-info-bg: var(--status-info-bg);
+  --color-info-border: var(--status-info-border);
+  --color-info-text: var(--status-info-fg);
+  --color-error-bg: var(--status-error-bg);
+  --color-error-border: var(--status-error-border);
+  --color-error-text: var(--status-error-fg);
+  --color-default-bg: var(--color-surface);
+  --color-default-border: var(--color-border);
+  --color-default-text: var(--color-text);
+}

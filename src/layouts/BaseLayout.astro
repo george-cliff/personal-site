@@ -5,6 +5,7 @@ import MainNav from '../components/layout/MainNav.astro';
 import SiteLauncher from '../components/layout/SiteLauncher.astro';
 import { sectionOf } from '../components/layout/navigation';
 import ColourSignature from '../components/ui/ColourSignature.astro';
+import ThemeToast from '../components/ui/ThemeToast.astro';
 import { site } from '../data/site';
 import '../styles/colours.css';
 
@@ -81,6 +82,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     </div>
 
     <SiteLauncher />
+    <ThemeToast />
   </body>
 </html>
 

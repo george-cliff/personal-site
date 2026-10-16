@@ -133,7 +133,7 @@ Everything else (headings, body text, buttons, cards, borders, utility controls)
 
 ## Status colours
 
-**Implemented as tokens; no component uses them yet.** Four functional feedback colours, defined directly in OKLCH in `colours.css` (three values per status and mode, not full 11-shade scales). They are not identity colours: their hues are kept visibly apart from the section accents.
+**Implemented.** Four functional feedback colours, defined directly in OKLCH in `colours.css` (three values per status and mode, not full 11-shade scales). They are not identity colours: their hues are kept visibly apart from the section accents.
 
 | Status    | Hue           | Means                                      | Light text | Dark text |
 | :-------- | :------------ | :----------------------------------------- | :--------- | :-------- |
@@ -158,7 +158,15 @@ Rules:
 - Never rely on colour alone. Every message needs text that states its meaning ("Error: …", "Saved"), and usually an icon: Tabler `tabler:circle-check` (success), `tabler:alert-triangle` (warning), `tabler:info-circle` (info), `tabler:alert-circle` (error). Mark icons `aria-hidden="true"` when the text already says it.
 - Keep each status's meaning the same everywhere.
 
-Typical use:
+### Toasts
+
+Accessible Astro's `ToastProvider` is mounted once, by `src/components/ui/ThemeToast.astro` in the shared layout; call `window.toast` to show one. `colours.css` points the library's `--color-{success,warning,info,error}-{bg,border,text}` variables at the status tokens, and its default toast at the neutrals.
+
+- Bottom-right (1rem from the edges on mobile), 3 seconds, dismissible, and Escape dismisses all. Announced politely (the region is a `role="log"`), with the type read first, e.g. "success - …". Focus is never moved. The slide-in only runs when reduced motion is not requested.
+- A message can have a subtitle: put it after a newline (`'Title\nSubtitle'`). The first line is styled as the title (bold, the status colour) and the rest as a smaller muted subtitle (`::first-line`, because the library sets messages as plain text). Keep titles short: if one wraps, only its first line is styled as the title.
+- **Theme switching:** switching theme with the header toggle or the launcher's switch shows a success toast: "Switched to dark mode / Colours look a little more vibrant :)" or "Switched to light mode / Colours might look a little muted :(". Nothing is shown on page load or when a saved choice is restored. A quick second switch replaces the previous theme toast. While the launcher is open, the toast sits behind its backdrop until it closes; the launcher's switch shows the new state itself.
+
+Typical use of the tokens in other components:
 
 ```css
 .message[data-status='error'] {

@@ -1,0 +1,101 @@
+---
+// Accessible Astro's toast region, plus a toast when the user switches theme.
+// Rendered once, by BaseLayout. Colours come from the --status-* tokens
+// (mapped in src/styles/colours.css).
+import { ToastProvider } from 'accessible-astro-components';
+---
+
+<ToastProvider position="bottom-right" duration={3000} />
+
+<script>
+  // Title and subtitle, sent as one message on two lines (the toast API takes
+  // plain text only); the CSS below styles the first line as the title.
+  const messages = {
+    dark: 'Switched to dark mode\nColours look a little more vibrant :)',
+    light: 'Switched to light mode\nColours might look a little muted :(',
+  };
+
+  // DarkMode also announces darkmode:change on page load and when restoring a
+  // saved choice, so only toast after an actual click on the header toggle or
+  // the launcher's switch. Capture phase: these run before DarkMode's own
+  // document listeners switch the theme.
+  let userSwitch = false;
+  let lastToast = '';
+
+  document.addEventListener(
+    'click',
+    (event) => {
+      if ((event.target as Element | null)?.closest?.('.darkmode-toggle')) userSwitch = true;
+    },
+    true,
+  );
+
+  document.addEventListener(
+    'launcher:action',
+    (event) => {
+      if ((event as CustomEvent).detail?.action === 'toggle-dark-mode') userSwitch = true;
+    },
+    true,
+  );
+
+  // Runs after BaseLayout's listener has applied the new theme.
+  document.addEventListener('darkmode:change', (event) => {
+    if (!userSwitch || !window.toast) return;
+    userSwitch = false;
+    // Replace the previous theme toast instead of stacking; other toasts stay.
+    if (lastToast) window.toast.dismiss(lastToast, true);
+    lastToast = window.toast.show({
+      message: (event as CustomEvent).detail.enabled ? messages.dark : messages.light,
+      type: 'success',
+    });
+  });
+</script>
+
+<style>
+  /* The toasts are cloned by the library at runtime, so style them globally.
+     The library's own rules use :where(), so these win without !important. */
+  :global(.toast-provider .toast) {
+    --toast-title: var(--color-default-text);
+
+    border-width: 1px;
+  }
+
+  :global(.toast-provider .toast.type-success) {
+    --toast-title: var(--color-success-text);
+  }
+
+  :global(.toast-provider .toast.type-info) {
+    --toast-title: var(--color-info-text);
+  }
+
+  :global(.toast-provider .toast.type-warning) {
+    --toast-title: var(--color-warning-text);
+  }
+
+  :global(.toast-provider .toast.type-error) {
+    --toast-title: var(--color-error-text);
+  }
+
+  /* A second line (after "\n") is a smaller, muted subtitle. */
+  :global(.toast-provider .toast-content) {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    white-space: pre-line;
+  }
+
+  :global(.toast-provider .toast-content::first-line) {
+    color: var(--toast-title);
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  /* Mobile: closer to the edges, and never wider than the screen. */
+  @media (max-width: 47.99rem) {
+    :global(.toast-provider) {
+      inset-block-end: 1rem;
+      inset-inline-end: 1rem;
+      inline-size: min(calc(100vw - 2rem), 420px);
+    }
+  }
+</style>
