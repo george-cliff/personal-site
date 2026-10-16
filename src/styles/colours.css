@@ -1,0 +1,156 @@
+/*
+ * georgecliff.com colour system v0.2 (OKLCH)
+ * Source: georgecliff-palette-v0.2-kit. The OKLCH values are authoritative;
+ * the HEX comments are approximate sRGB equivalents.
+ *
+ * Two layers:
+ *   1. Palette: 5 families × 11 shades (50–950). Raw values only. Components
+ *      should not use these directly.
+ *   2. Semantic: --color-* roles, mapped to palette shades per mode. Components
+ *      use only these, so palette changes stay in this file.
+ *
+ * The UI is neutral (Paper / Graphite). Violet is not a primary colour. The four
+ * accent families are for selective, contextual use via --color-accent-*.
+ *
+ * Mode: follows prefers-color-scheme unless <html data-theme="light|dark"> is
+ * set. BaseLayout syncs data-theme with the header's dark mode toggle.
+ */
+
+:root {
+  /* Paper / Graphite */
+  --paper-graphite-50: oklch(99.0123% 0.016076 95.219); /* #FFFCF0 · chosen anchor */
+  --paper-graphite-100: oklch(95.3677% 0.014734 98.288); /* #F2F0E5 · chosen anchor */
+  --paper-graphite-200: oklch(91.7398% 0.014873 98.298); /* #E6E4D9 · chosen anchor */
+  --paper-graphite-300: oklch(84.6304% 0.013688 102.053); /* #CECDC3 · chosen anchor */
+  --paper-graphite-400: oklch(75.3469% 0.015526 87.826); /* #B3AFA4 */
+  --paper-graphite-500: oklch(66.0635% 0.017364 73.598); /* #999187 · chosen anchor */
+  --paper-graphite-600: oklch(59.0628% 0.015280 72.685); /* #837C74 */
+  --paper-graphite-700: oklch(52.0621% 0.013195 71.771); /* #6E6861 · chosen anchor */
+  --paper-graphite-800: oklch(40.3901% 0.009823 73.615); /* #4C4843 · chosen anchor */
+  --paper-graphite-900: oklch(32.2780% 0.008153 75.280); /* #36332F · chosen anchor */
+  --paper-graphite-950: oklch(25.3392% 0.004785 67.609); /* #242220 · chosen anchor */
+
+  /* Violet */
+  --violet-50: oklch(96.4122% 0.020858 304.035); /* #F6F0FF · chosen anchor */
+  --violet-100: oklch(92.9442% 0.040525 303.585); /* #EDE2FF */
+  --violet-200: oklch(86.0082% 0.079861 302.685); /* #DBC5FD · chosen anchor */
+  --violet-300: oklch(80.1052% 0.114203 302.284); /* #CCACFB */
+  --violet-400: oklch(74.2023% 0.148546 301.883); /* #BD93F9 · chosen anchor */
+  --violet-500: oklch(64.6028% 0.147384 299.531); /* #9C77DA */
+  --violet-600: oklch(55.0033% 0.146221 297.180); /* #7C5BBB */
+  --violet-700: oklch(45.4038% 0.145059 294.828); /* #5E409D · chosen anchor */
+  --violet-800: oklch(39.5217% 0.120282 295.241); /* #4D357F */
+  --violet-900: oklch(33.6395% 0.095505 295.654); /* #3C2A62 · chosen anchor */
+  --violet-950: oklch(25.6401% 0.074954 297.770); /* #281942 · chosen anchor */
+
+  /* Teal / Cyan */
+  --teal-50: oklch(98.2446% 0.012715 202.927); /* #F0FCFD · chosen anchor */
+  --teal-100: oklch(96.2483% 0.028848 204.911); /* #DDF9FC */
+  --teal-200: oklch(92.2557% 0.061114 208.879); /* #B6F1FB */
+  --teal-300: oklch(88.2630% 0.093380 212.846); /* #8BE9FD · chosen anchor */
+  --teal-400: oklch(77.6376% 0.096619 199.712); /* #61C9CE */
+  --teal-500: oklch(67.0122% 0.099858 186.578); /* #3AA99F · chosen anchor */
+  --teal-600: oklch(55.4409% 0.086316 186.744); /* #24837B · chosen anchor */
+  --teal-700: oklch(47.2112% 0.072364 186.745); /* #1D6862 */
+  --teal-800: oklch(38.9815% 0.058412 186.747); /* #164F4A · chosen anchor */
+  --teal-900: oklch(30.1351% 0.044115 188.446); /* #0D3532 */
+  --teal-950: oklch(25.7119% 0.036967 189.295); /* #092927 · chosen anchor */
+
+  /* Copper / Amber */
+  --copper-50: oklch(97.6382% 0.020841 79.097); /* #FFF6E8 · chosen anchor */
+  --copper-100: oklch(94.7891% 0.041499 76.589); /* #FEEBD0 */
+  --copper-200: oklch(89.0909% 0.082815 71.574); /* #FED39F */
+  --copper-300: oklch(83.3927% 0.124132 66.558); /* #FFB86C · chosen anchor */
+  --copper-400: oklch(74.5750% 0.139025 57.929); /* #ED944A */
+  --copper-500: oklch(65.7574% 0.153918 49.300); /* #DA702C · chosen anchor */
+  --copper-600: oklch(56.6506% 0.152296 45.020); /* #BC5215 · chosen anchor */
+  --copper-700: oklch(52.0528% 0.130808 48.459); /* #A34D14 · chosen anchor */
+  --copper-800: oklch(42.3806% 0.103342 46.836); /* #7A3913 */
+  --copper-900: oklch(32.7083% 0.075877 45.213); /* #53260F */
+  --copper-950: oklch(27.8722% 0.062144 44.402); /* #411D0C · chosen anchor */
+
+  /* Rose / Magenta */
+  --rose-50: oklch(96.9186% 0.019192 343.934); /* #FFF0F8 · chosen anchor */
+  --rose-100: oklch(93.8532% 0.039134 344.346); /* #FFE1F1 */
+  --rose-200: oklch(87.7225% 0.081981 345.168); /* #FFC1E3 */
+  --rose-300: oklch(81.5918% 0.129580 345.990); /* #FFA0D4 */
+  --rose-400: oklch(75.4611% 0.183070 346.812); /* #FF79C6 · chosen anchor */
+  --rose-500: oklch(66.8206% 0.175844 347.794); /* #DF60A8 */
+  --rose-600: oklch(58.1801% 0.168618 348.776); /* #BF488B */
+  --rose-700: oklch(49.5396% 0.161392 349.757); /* #A02F6F · chosen anchor */
+  --rose-800: oklch(43.9863% 0.140735 349.417); /* #87285E · chosen anchor */
+  --rose-900: oklch(32.0852% 0.099052 346.298); /* #54193D */
+  --rose-950: oklch(26.1347% 0.078210 344.739); /* #3D112D · chosen anchor */
+
+  /* Semantic roles: light (default) */
+  color-scheme: light;
+  --color-background: var(--paper-graphite-50); /* page */
+  --color-surface: var(--paper-graphite-50); /* cards, flyouts */
+  --color-surface-muted: var(--paper-graphite-100); /* recessed areas */
+  --color-sidebar: var(--paper-graphite-100); /* navigation sidebar and mobile nav bar */
+  --color-text: var(--paper-graphite-950);
+  --color-text-muted: var(--paper-graphite-700); /* secondary text and metadata */
+  --color-border: var(--paper-graphite-300); /* dividers and outlines */
+  --color-link: var(--paper-graphite-900);
+  --color-interactive: var(--paper-graphite-950); /* filled controls, selection */
+  --color-on-interactive: var(--paper-graphite-50); /* text on --color-interactive */
+  --color-accent-violet: var(--violet-700); /* expressive */
+  --color-accent-teal: var(--teal-800); /* technical, projects */
+  --color-accent-copper: var(--copper-700); /* warmth, annotations */
+  --color-accent-rose: var(--rose-800); /* personality */
+  --color-focus: var(--paper-graphite-950); /* focus indicators */
+}
+
+/* Explicit light choice wins over a dark OS preference. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Semantic roles: dark. Keep this block and the media query below in sync. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-background: var(--paper-graphite-950);
+  --color-surface: var(--paper-graphite-900);
+  --color-surface-muted: var(--paper-graphite-800);
+  --color-sidebar: var(--paper-graphite-900);
+  --color-text: var(--paper-graphite-50);
+  --color-text-muted: var(--paper-graphite-300);
+  --color-border: var(--paper-graphite-700);
+  --color-link: var(--paper-graphite-100);
+  --color-interactive: var(--paper-graphite-50);
+  --color-on-interactive: var(--paper-graphite-950);
+  --color-accent-violet: var(--violet-300);
+  --color-accent-teal: var(--teal-300);
+  --color-accent-copper: var(--copper-300);
+  --color-accent-rose: var(--rose-300);
+  --color-focus: var(--paper-graphite-50);
+}
+
+/* No explicit choice: follow the OS preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-background: var(--paper-graphite-950);
+    --color-surface: var(--paper-graphite-900);
+    --color-surface-muted: var(--paper-graphite-800);
+    --color-sidebar: var(--paper-graphite-900);
+    --color-text: var(--paper-graphite-50);
+    --color-text-muted: var(--paper-graphite-300);
+    --color-border: var(--paper-graphite-700);
+    --color-link: var(--paper-graphite-100);
+    --color-interactive: var(--paper-graphite-50);
+    --color-on-interactive: var(--paper-graphite-950);
+    --color-accent-violet: var(--violet-300);
+    --color-accent-teal: var(--teal-300);
+    --color-accent-copper: var(--copper-300);
+    --color-accent-rose: var(--rose-300);
+    --color-focus: var(--paper-graphite-50);
+  }
+}
+
+/* Third-party: Accessible Astro Launcher derives its light/dark colours from
+   these two theme colours, so tint it with the neutral family. */
+:root {
+  --launcher-theme-light: var(--paper-graphite-50);
+  --launcher-theme-dark: var(--paper-graphite-950);
+}

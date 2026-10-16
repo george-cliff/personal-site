@@ -13,7 +13,10 @@ export default defineConfig({
     '/misc': '/writing/hobbies/',
   },
   integrations: [
-    expressiveCode(),
+    expressiveCode({
+      // Follow the site's data-theme override (see src/styles/colours.css), not just the OS.
+      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
+    }),
     mdx(),
     sitemap(),
     icon(),

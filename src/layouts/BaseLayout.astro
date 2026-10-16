@@ -4,6 +4,7 @@ import Header from '../components/layout/Header.astro';
 import MainNav from '../components/layout/MainNav.astro';
 import SiteLauncher from '../components/layout/SiteLauncher.astro';
 import { site } from '../data/site';
+import '../styles/colours.css';
 
 interface Props {
   title: string;
@@ -22,6 +23,19 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{pageTitle}</title>
     {description && <meta name="description" content={description} />}
+    <script is:inline>
+      // colours.css themes from data-theme. Restore a saved choice before first
+      // paint, then mirror the header's DarkMode toggle, which stores 'darkMode'
+      // and announces changes. With nothing saved, the OS preference applies.
+      (() => {
+        const apply = (dark) => document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        try {
+          const saved = localStorage.getItem('darkMode');
+          if (saved) apply(saved === 'enabled');
+        } catch {}
+        document.addEventListener('darkmode:change', (event) => apply(event.detail.enabled));
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -55,23 +69,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
 </html>
 
 <style is:global>
-  /* Temporary neutral palettes; final colours are still to be decided. */
-  :root {
-    --color-bg: #ffffff;
-    --color-text: #1a1a1a;
-    --color-muted: #595959;
-    --color-border: #d0d0d0;
-    --color-link: #1a1a1a;
-  }
-
-  /* Set by Accessible Astro's DarkMode toggle. */
-  :root.darkmode {
-    --color-bg: #121212;
-    --color-text: #ececec;
-    --color-muted: #a6a6a6;
-    --color-border: #3a3a3a;
-    --color-link: #ececec;
-  }
+  /* Colours come from src/styles/colours.css; use its semantic --color-* roles. */
 
   *,
   *::before,
@@ -99,7 +97,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
 
   body {
     margin: 0;
-    background: var(--color-bg);
+    background: var(--color-background);
     color: var(--color-text);
     font-family: system-ui, sans-serif;
     line-height: 1.5;
@@ -110,8 +108,13 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
   }
 
   :focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-interactive);
+    color: var(--color-on-interactive);
   }
 
   /* Hidden visually but still read by screen readers. */
@@ -132,7 +135,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     left: 0.5rem;
     z-index: 100;
     padding: 0.5rem 1rem;
-    background: var(--color-bg);
+    background: var(--color-background);
     color: var(--color-text);
     border: 2px solid currentColor;
     transform: translateY(-200%);
@@ -163,7 +166,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     top: 0;
     z-index: 20;
     padding: 0.25rem 0.5rem;
-    background: var(--color-bg);
+    background: var(--color-sidebar);
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -219,7 +222,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
       position: sticky;
       top: 0;
       z-index: 10;
-      background: var(--color-bg);
+      background: var(--color-background);
     }
   }
 </style>
