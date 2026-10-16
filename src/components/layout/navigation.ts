@@ -27,12 +27,12 @@ export const links: NavLink[] = [
     icon: 'tabler:code',
     section: 'projects',
     children: [
+      { label: 'All projects', href: '/projects/', icon: 'tabler:layout-grid' },
       ...featuredProjects.map((project) => ({
         label: project.title,
         href: projectUrl(project),
         icon: project.icon,
       })),
-      { label: 'All projects', href: '/projects/', icon: 'tabler:layout-grid' },
     ],
   },
   {

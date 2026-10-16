@@ -11,8 +11,8 @@ interface CategoryInfo {
 
 export const categories: Record<'devlog' | 'notes' | 'hobbies', CategoryInfo> = {
   devlog: { label: 'Devlog', icon: 'tabler:terminal-2' },
-  notes: { label: 'Notes', icon: 'tabler:notes' },
   hobbies: { label: 'Hobbies', icon: 'tabler:compass' },
+  notes: { label: 'Notes', icon: 'tabler:notes' },
 };
 
 export type Category = keyof typeof categories;
