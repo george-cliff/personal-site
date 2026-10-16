@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Colophon"
+  description="The technology, design choices and acknowledgments behind georgecliff.com."
+>
+  <article class="colophon">
+    <h1>Colophon</h1>
+    <p>
+      This page documents the technology, design choices and acknowledgments
+      behind georgecliff.com.
+    </p>
+
+    <section aria-labelledby="built-with">
+      <h2 id="built-with">Built with</h2>
+      <ul>
+        <li><a href="https://astro.build/">Astro</a> — website framework</li>
+        <li><a href="https://pages.github.com/">GitHub Pages</a> — hosting</li>
+        <li><a href="https://github.com/features/actions">GitHub Actions</a> — deployment</li>
+        <li><a href="https://pagescms.org/">Pages CMS</a> — content management</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="typography">
+      <h2 id="typography">Typography</h2>
+      <p>
+        The <a href="https://typeof.net/Iosevka/">Iosevka</a> family is
+        self-hosted and available to the site. How each face is used is still
+        being decided.
+      </p>
+      <ul>
+        <li>Iosevka</li>
+        <li>Iosevka Aile</li>
+        <li>Iosevka Etoile</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="icons">
+      <h2 id="icons">Icons</h2>
+      <ul>
+        <li><a href="https://tabler.io/icons">Tabler Icons</a></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="components">
+      <h2 id="components">Components &amp; accessibility</h2>
+      <p>
+        <a href="https://accessible-astro.dev/">Accessible Astro</a> is a key
+        inspiration for building an accessible site. Its dark mode toggle and
+        site launcher are used directly.
+      </p>
+    </section>
+
+    <section aria-labelledby="infrastructure">
+      <h2 id="infrastructure">Infrastructure</h2>
+      <ul>
+        <li><a href="https://porkbun.com/">Porkbun</a> — domain registrar and DNS</li>
+        <li><a href="https://github.com/">GitHub</a> — source control and deployment</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="source">
+      <h2 id="source">Source code</h2>
+      <p>
+        The source is on GitHub at
+        <a href="https://github.com/george-cliff/personal-site">george-cliff/personal-site</a>.
+      </p>
+    </section>
+
+    <section aria-labelledby="design">
+      <h2 id="design">Design &amp; colours</h2>
+      <p>
+        The final colour palette, and any credit for it, is still being decided.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .colophon {
+    max-width: 42rem;
+  }
+
+  h2 {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+  }
+
+  a {
+    overflow-wrap: anywhere;
+  }
+</style>

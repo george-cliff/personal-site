@@ -1,0 +1,51 @@
+---
+import { site } from '../../data/site';
+
+// Rendered inside BaseLayout's <footer> landmark, so no landmark here.
+const year = new Date().getFullYear();
+---
+
+<div class="primary">
+  <p>&copy; {year} {site.name}</p>
+  <p>
+    <a href="/colophon/">Colophon</a>
+    <span class="sep" aria-hidden="true">·</span>
+    Built with <a href="https://astro.build/">Astro</a>
+  </p>
+</div>
+
+<p class="secondary">
+  Hosted on <a href="https://pages.github.com/">GitHub Pages</a>
+  <span class="sep" aria-hidden="true">·</span>
+  Domain via <a href="https://porkbun.com/">Porkbun</a>
+</p>
+
+<style>
+  p {
+    margin: 0;
+  }
+
+  /* Copyright left, credits right; stacks when there isn't room. */
+  .primary {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .secondary {
+    margin-top: 0.25rem;
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+  }
+
+  .sep {
+    margin-inline: 0.4em;
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+  }
+</style>

@@ -1,0 +1,20 @@
+---
+import { Launcher, LauncherLink, LauncherNav, LauncherPreferences, LauncherSwitch } from 'accessible-astro-launcher';
+import { Icon } from 'astro-icon/components';
+import { launcherId, links } from './navigation';
+---
+
+<Launcher id={launcherId} labels={{ placeholder: 'Search pages…' }}>
+  <LauncherNav label="Pages">
+    {links.map(({ label, href, icon }) => (
+      <LauncherLink label={label} href={href}>
+        <Icon slot="icon" name={icon} aria-hidden="true" />
+      </LauncherLink>
+    ))}
+  </LauncherNav>
+
+  <LauncherPreferences label="Preferences">
+    <!-- Handled by the header's DarkMode component, which listens for this action. -->
+    <LauncherSwitch label="Dark mode" onAction="toggle-dark-mode" keywords={['theme', 'light']} />
+  </LauncherPreferences>
+</Launcher>

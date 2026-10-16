@@ -1,0 +1,170 @@
+---
+import { DarkMode } from 'accessible-astro-components';
+import { LauncherTrigger } from 'accessible-astro-launcher';
+import { Icon } from 'astro-icon/components';
+import { site, socialLinks } from '../../data/site';
+import SocialLink from '../ui/SocialLink.astro';
+import { launcherId } from './navigation';
+---
+
+<div class="bar">
+  <div class="identity">
+    {site.gravatarHash ? (
+      <img
+        class="avatar"
+        src={`https://gravatar.com/avatar/${site.gravatarHash}?s=160&d=mp`}
+        alt=""
+        width="80"
+        height="80"
+      />
+    ) : (
+      <span class="avatar" aria-hidden="true">{site.initials}</span>
+    )}
+    <div>
+      <a class="name" href="/">{site.name}</a>
+      <p class="bio">{site.bio}</p>
+    </div>
+  </div>
+
+  {socialLinks.length > 0 && (
+    <ul class="social">
+      {socialLinks.map((link) => (
+        <li>
+          <SocialLink {...link} />
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <div class="actions">
+    <LauncherTrigger launcherId={launcherId} compact aria-keyshortcuts="Control+K Meta+K" />
+
+    <DarkMode initialMode="auto" label="Dark mode">
+      <Icon slot="light" name="tabler:sun" aria-hidden="true" />
+      <Icon slot="dark" name="tabler:moon" aria-hidden="true" />
+    </DarkMode>
+  </div>
+</div>
+
+<script>
+  // DarkMode only reads the system preference on load. While no manual
+  // choice is stored (auto mode), follow live system changes too.
+  const darkMode = (window as any).darkMode;
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (localStorage.getItem('darkMode')) return;
+    e.matches ? darkMode.enable() : darkMode.disable();
+    localStorage.removeItem('darkMode');
+  });
+</script>
+
+<style>
+  /* Up to wide desktop: identity on top, social links and actions below. Wide: one row. */
+  .bar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'identity identity'
+      'social actions';
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+
+  @media (min-width: 76rem) {
+    .bar {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-areas: 'identity social actions';
+    }
+
+    .social {
+      justify-self: end;
+    }
+  }
+
+  .identity {
+    grid-area: identity;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border: 1px solid;
+    border-radius: 50%;
+    object-fit: cover;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .name {
+    color: inherit;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-decoration: none;
+    text-underline-offset: 0.25em;
+  }
+
+  .name:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    max-width: 32rem;
+    margin: 0.25rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 48rem) {
+    .avatar {
+      width: 80px;
+      height: 80px;
+      font-size: 1.5rem;
+    }
+  }
+
+  .social {
+    grid-area: social;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Mobile: icon-only social badges; the label stays for screen readers. */
+  @media (max-width: 47.99rem) {
+    .social :global(.badge) {
+      justify-content: center;
+      width: 2.75rem;
+      padding-inline: 0;
+    }
+
+    .social :global(.label) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  .actions {
+    grid-area: actions;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* Match the dark mode toggle's 44px touch target. */
+    --launcher-trigger-height: 2.75rem;
+  }
+
+  .bar :global(.darkmode-toggle) {
+    color: inherit;
+  }
+</style>
