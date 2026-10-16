@@ -40,13 +40,15 @@ src/
 
 ## Design
 
-**Tactile · Expressive · Editorial**: a considered architectural studio on the outside, a curious, expressive workshop inside. The interface is warm and neutral (Paper / Graphite); four accent families (Violet, Teal, Copper, Rose) are used selectively, because colour should indicate context, not decorate everything.
+**Tactile · Expressive · Editorial**: a considered architectural studio on the outside, a curious, expressive workshop inside. The interface is warm and neutral (Paper / Graphite); four accent families mark the sections (Violet: Home, Teal: Projects, Copper: Writing, Rose: About) and are used selectively, because colour should indicate context and interaction, not decorate everything.
 
 - Colours live in `src/styles/colours.css`. Components use its semantic `--color-*` roles, never raw palette shades or hard-coded values.
-- Light and dark mode follow the system setting, and the header toggle overrides it.
-- Below 768px the navigation is a top bar; from 768px up it's a sidebar.
+- Each page's section comes from the navigation (`sectionOf()` in `navigation.ts`); the current nav item and content links take that section's accent, and each nav item shows its own section's colour on hover. Pages outside the navigation get Violet. Header social badges have their own colours and turn Rose on hover.
+- Status colours (`--status-{success,warning,info,error}-*`) are for feedback messages only, never decoration or section identity.
+- The site is dark by default; the header toggle switches to light and the choice is remembered.
+- Below 768px the navigation is a top bar and the four-colour signature sits in the footer; from 768px up it's a sidebar, with a `georgecliff.com` label and the signature at its foot.
 
-See [docs/design-system.md](docs/design-system.md) for the colour system, layouts, section identity and four-colour signature, including what's agreed but not yet built.
+See [docs/design-system.md](docs/design-system.md) for the colour system, layouts, section identity and four-colour signature.
 
 ## Writing
 
