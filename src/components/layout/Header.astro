@@ -37,7 +37,7 @@ import { launcherId } from './navigation';
   )}
 
   <div class="actions">
-    <LauncherTrigger launcherId={launcherId} compact aria-keyshortcuts="Control+K Meta+K" />
+    <LauncherTrigger launcherId={launcherId} iconOnly aria-keyshortcuts="Control+K Meta+K" />
 
     <DarkMode initialMode="auto" label="Dark mode">
       <Icon slot="light" name="tabler:sun" aria-hidden="true" />
@@ -166,5 +166,27 @@ import { launcherId } from './navigation';
 
   .bar :global(.darkmode-toggle) {
     color: inherit;
+  }
+
+  /* Style the launcher trigger like the dark mode toggle beside it,
+     instead of the launcher's own filled, faint-bordered look. */
+  .actions :global(.launcher-trigger .trigger) {
+    border: 2px solid;
+    background: transparent;
+    color: inherit;
+  }
+
+  .actions :global(.launcher-trigger .trigger:is(:hover, :focus-visible)) {
+    box-shadow: 0 0 0 0.25rem;
+  }
+
+  .actions :global(.launcher-trigger .trigger:focus-visible) {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .actions :global(.launcher-trigger .trigger) {
+      transition: box-shadow 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
   }
 </style>
