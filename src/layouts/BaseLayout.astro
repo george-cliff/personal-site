@@ -3,6 +3,7 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import MainNav from '../components/layout/MainNav.astro';
 import SiteLauncher from '../components/layout/SiteLauncher.astro';
+import ColourSignature from '../components/ui/ColourSignature.astro';
 import { site } from '../data/site';
 import '../styles/colours.css';
 
@@ -43,6 +44,9 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     <div class="shell">
       <div class="sidebar">
         <MainNav />
+        <div class="signature-sidebar">
+          <ColourSignature />
+        </div>
       </div>
 
       <div class="column">
@@ -59,6 +63,9 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
         <footer class="site-footer">
           <div class="container">
             <Footer />
+            <div class="signature-footer">
+              <ColourSignature />
+            </div>
           </div>
         </footer>
       </div>
@@ -195,6 +202,17 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     border-top: 1px solid var(--color-border);
   }
 
+  /* One colour signature shows at a time: in the footer on mobile,
+     at the foot of the sidebar from tablet up. */
+  .signature-sidebar {
+    display: none;
+  }
+
+  .signature-footer {
+    max-width: 20rem;
+    margin: 1rem auto 0;
+  }
+
   /* Tablet and up: the nav is a full-height sidebar. */
   @media (min-width: 48rem) {
     .shell {
@@ -203,12 +221,24 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     }
 
     .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
       height: 100vh;
       height: 100dvh;
       padding: 1.5rem 1rem;
       /* No overflow scrolling here: it would clip the nav flyouts. */
       border-bottom: 0;
       border-right: 1px solid var(--color-border);
+    }
+
+    .signature-sidebar {
+      display: block;
+      margin-top: auto;
+    }
+
+    .signature-footer {
+      display: none;
     }
 
     .container {

@@ -99,6 +99,12 @@
   --color-accent-copper: var(--copper-700); /* warmth, annotations */
   --color-accent-rose: var(--rose-800); /* personality */
   --color-focus: var(--paper-graphite-950); /* focus indicators */
+  /* Four-colour signature motif: decorative blocks, so mid shades rather than
+     the text-contrast accents above. Fixed order: violet, teal, copper, rose. */
+  --color-signature-violet: var(--violet-500);
+  --color-signature-teal: var(--teal-500);
+  --color-signature-copper: var(--copper-500);
+  --color-signature-rose: var(--rose-500);
 }
 
 /* Explicit light choice wins over a dark OS preference. */
@@ -124,6 +130,10 @@
   --color-accent-copper: var(--copper-300);
   --color-accent-rose: var(--rose-300);
   --color-focus: var(--paper-graphite-50);
+  --color-signature-violet: var(--violet-400);
+  --color-signature-teal: var(--teal-400);
+  --color-signature-copper: var(--copper-400);
+  --color-signature-rose: var(--rose-400);
 }
 
 /* No explicit choice: follow the OS preference. */
@@ -145,6 +155,10 @@
     --color-accent-copper: var(--copper-300);
     --color-accent-rose: var(--rose-300);
     --color-focus: var(--paper-graphite-50);
+    --color-signature-violet: var(--violet-400);
+    --color-signature-teal: var(--teal-400);
+    --color-signature-copper: var(--copper-400);
+    --color-signature-rose: var(--rose-400);
   }
 }
 

@@ -1,0 +1,40 @@
+---
+// Decorative four-colour identity motif. Fills its container's width;
+// the parent decides where it sits and when it shows.
+---
+
+<div class="signature" aria-hidden="true">
+  <span class="violet"></span>
+  <span class="teal"></span>
+  <span class="copper"></span>
+  <span class="rose"></span>
+</div>
+
+<style>
+  .signature {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.25rem;
+  }
+
+  span {
+    height: 0.5625rem;
+    border-radius: 2px;
+  }
+
+  .violet {
+    background: var(--color-signature-violet);
+  }
+
+  .teal {
+    background: var(--color-signature-teal);
+  }
+
+  .copper {
+    background: var(--color-signature-copper);
+  }
+
+  .rose {
+    background: var(--color-signature-rose);
+  }
+</style>
