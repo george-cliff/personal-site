@@ -1,7 +1,23 @@
 ---
+import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About">
-  <h1>About</h1>
+<BaseLayout title="About" description={`About ${site.name}.`}>
+  <article class="about">
+    <h1>About me</h1>
+
+    {/*
+      Replace "Coming soon…" with sections as they're written, e.g.
+      <section aria-labelledby="background"><h2 id="background">Background</h2>…</section>
+      Suggested: Background, Education, Interests, What I'm doing now, Technical interests.
+    */}
+    <p>Coming soon…</p>
+  </article>
 </BaseLayout>
+
+<style>
+  .about {
+    max-width: 42rem;
+  }
+</style>

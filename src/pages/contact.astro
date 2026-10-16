@@ -1,7 +1,14 @@
 ---
+import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Contact">
+<BaseLayout title="Contact" description={`How to get in touch with ${site.name}.`}>
   <h1>Contact</h1>
+
+  {/*
+    When it's ready, the contact links can be listed from `socialLinks` in
+    src/data/site.ts with the SocialLink component, as the header does.
+  */}
+  <p>Coming soon…</p>
 </BaseLayout>

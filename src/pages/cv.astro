@@ -1,7 +1,133 @@
 ---
+import { Icon } from 'astro-icon/components';
+import { cv, type CvEntry } from '../data/cv';
+import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const entrySections: { id: string; heading: string; entries: CvEntry[] }[] = [
+  { id: 'education', heading: 'Education', entries: cv.education },
+  { id: 'experience', heading: 'Experience', entries: cv.experience },
+];
+const isEmpty =
+  !cv.profile &&
+  [cv.education, cv.experience, cv.skills, cv.projects, cv.additional].every(
+    (section) => section.length === 0,
+  );
 ---
 
-<BaseLayout title="CV">
-  <h1>CV</h1>
+<BaseLayout title="CV" description={`The CV of ${site.name}.`}>
+  <article class="cv">
+    <h1>CV</h1>
+
+    {cv.pdf && (
+      <p>
+        <a class="download" href={cv.pdf} download>
+          <Icon name="tabler:file-download" class="icon" aria-hidden="true" />
+          Download as PDF
+        </a>
+      </p>
+    )}
+
+    {cv.profile && (
+      <section aria-labelledby="profile">
+        <h2 id="profile">Profile</h2>
+        <p>{cv.profile}</p>
+      </section>
+    )}
+
+    {entrySections.map(({ id, heading, entries }) => entries.length > 0 && (
+      <section aria-labelledby={id}>
+        <h2 id={id}>{heading}</h2>
+        {entries.map(({ title, organisation, dates, details }) => (
+          <div class="entry">
+            <h3>{title}</h3>
+            <p class="where">{organisation} <span aria-hidden="true">·</span> {dates}</p>
+            {details && details.length > 0 && (
+              <ul>
+                {details.map((detail) => <li>{detail}</li>)}
+              </ul>
+            )}
+          </div>
+        ))}
+      </section>
+    ))}
+
+    {cv.skills.length > 0 && (
+      <section aria-labelledby="skills">
+        <h2 id="skills">Technical skills</h2>
+        <dl>
+          {cv.skills.map(({ group, items }) => (
+            <>
+              <dt>{group}</dt>
+              <dd>{items.join(', ')}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+    )}
+
+    {cv.projects.length > 0 && (
+      <section aria-labelledby="projects">
+        <h2 id="projects">Projects</h2>
+        <ul>
+          {cv.projects.map(({ title, href, description }) => (
+            <li>{href ? <a href={href}>{title}</a> : title}: {description}</li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {cv.additional.length > 0 && (
+      <section aria-labelledby="additional">
+        <h2 id="additional">Additional information</h2>
+        <ul>
+          {cv.additional.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+    )}
+
+    {isEmpty && <p>Coming soon…</p>}
+  </article>
 </BaseLayout>
+
+<style>
+  .cv {
+    max-width: 42rem;
+  }
+
+  h2 {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    margin: 1.25rem 0 0;
+    font-size: 1.0625rem;
+  }
+
+  .where {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  dt {
+    font-weight: bold;
+  }
+
+  dd {
+    margin: 0 0 0.5rem;
+  }
+
+  .download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-underline-offset: 0.2em;
+  }
+
+  .icon {
+    width: 1.25em;
+    height: 1.25em;
+    flex-shrink: 0;
+  }
+</style>
