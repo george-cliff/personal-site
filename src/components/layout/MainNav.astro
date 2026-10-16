@@ -24,12 +24,12 @@ function current(href: string, exact = false) {
 */}
 <nav class="main-nav" aria-label="Main">
   <ul class="list">
-    {links.map(({ label, href, icon, mobileIconOnly, children }) => {
+    {links.map(({ label, href, icon, mobileIconOnly, children, section }) => {
       const flyoutId = `nav-${label.toLowerCase()}`;
       const childCurrent = children?.some((child) => current(child.href, child.href === href));
 
       return (
-        <li class:list={['item', { 'has-flyout': children }]}>
+        <li class:list={['item', { 'has-flyout': children }]} data-section={section}>
           <a
             class:list={['link', { 'icon-only': mobileIconOnly }]}
             href={href}
@@ -178,11 +178,38 @@ function current(href: string, exact = false) {
     text-decoration: underline;
   }
 
-  /* Lifted off the sidebar tint onto the page colour. */
+  /* Each item, and its flyout, uses its own section's colours (data-section
+     on the item), so hovering Projects shows Teal on any page.
+     Current: lifted onto the page colour, with the accent on the border and
+     icon; the text stays neutral. */
   .link[aria-current] {
-    border-color: var(--color-border);
+    border-color: var(--color-section);
     background: var(--color-background);
     font-weight: bold;
+  }
+
+  .link[aria-current] .icon {
+    color: var(--color-section);
+  }
+
+  .link:is(:hover, :focus-visible) {
+    border-color: var(--color-section);
+    background: var(--color-section-tint);
+    color: var(--color-section-strong);
+  }
+
+  .link:is(:hover, :focus-visible) .icon {
+    color: var(--color-section);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .link,
+    .toggle {
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+    }
   }
 
   /* Inset so the outline isn't clipped by the scrolling list. */
@@ -239,9 +266,14 @@ function current(href: string, exact = false) {
     visibility: visible;
   }
 
-  .toggle:hover,
+  .toggle:is(:hover, :focus-visible),
   .toggle[aria-expanded='true'] {
-    border-color: var(--color-border);
+    border-color: var(--color-section);
+  }
+
+  .toggle:is(:hover, :focus-visible) {
+    background: var(--color-section-tint);
+    color: var(--color-section-strong);
   }
 
   /* Points down on mobile, right on desktop. */

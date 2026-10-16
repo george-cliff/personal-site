@@ -3,6 +3,7 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import MainNav from '../components/layout/MainNav.astro';
 import SiteLauncher from '../components/layout/SiteLauncher.astro';
+import { sectionOf } from '../components/layout/navigation';
 import ColourSignature from '../components/ui/ColourSignature.astro';
 import { site } from '../data/site';
 import '../styles/colours.css';
@@ -17,7 +18,7 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-section={sectionOf(Astro.url.pathname)}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -112,6 +113,22 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
 
   a {
     color: var(--color-link);
+  }
+
+  a:where(:hover, :focus-visible) {
+    color: var(--color-link-hover);
+  }
+
+  /* Links in page content take the nearest section's colour: the page's, or a
+     block's own data-section (e.g. on the homepage). Zero specificity, so
+     components that style their own links (nav, badges, cards) keep theirs. */
+  :where(.content) a {
+    color: var(--color-section);
+  }
+
+  :where(.content) a:where(:hover, :focus-visible) {
+    color: var(--color-section-strong);
+    text-decoration-thickness: 2px;
   }
 
   :focus-visible {

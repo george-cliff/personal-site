@@ -21,7 +21,7 @@ const recentPosts = (await getPosts()).slice(0, 5);
     want to say hello.
   </p>
 
-  <section aria-labelledby="workbench">
+  <section aria-labelledby="workbench" data-section="projects">
     <h2 id="workbench">On the workbench</h2>
     {featured.length > 0 ? (
       <ul class="projects">
@@ -37,7 +37,7 @@ const recentPosts = (await getPosts()).slice(0, 5);
     <p><a href="/projects/">All projects</a></p>
   </section>
 
-  <section aria-labelledby="notebook">
+  <section aria-labelledby="notebook" data-section="writing">
     <h2 id="notebook">From the notebook</h2>
     <PostList posts={recentPosts} showCategory />
     <p><a href="/writing/">All writing</a></p>
