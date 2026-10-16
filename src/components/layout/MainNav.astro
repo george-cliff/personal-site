@@ -17,10 +17,10 @@ function current(href: string, exact = false) {
 ---
 
 {/*
-  Links with children get a flyout: it opens on hover (desktop) or with the
-  toggle button beside the link (keyboard and touch). The parent link still
-  navigates. The script below adds the toggle behaviour; without it, hover
-  still works and every flyout page is reachable from its parent page.
+  Links with children get a flyout: it opens on hover (desktop) or by
+  activating the link itself (keyboard and touch), which the script below
+  turns into a button. Without the script, hover still works, the link
+  navigates and every flyout page is reachable from its parent page.
 */}
 <nav class="main-nav" aria-label="Main">
   <ul class="list">
@@ -31,19 +31,16 @@ function current(href: string, exact = false) {
       return (
         <li class:list={['item', { 'has-flyout': children }]} data-section={section}>
           <a
-            class:list={['link', { 'icon-only': mobileIconOnly }]}
+            class:list={['link', { 'icon-only': mobileIconOnly, trigger: children }]}
             href={href}
             aria-current={current(href) ?? (childCurrent ? 'true' : undefined)}
           >
             <Icon name={icon} class="icon" aria-hidden="true" />
             <span class="label">{label}</span>
+            {children && <Icon name="tabler:chevron-right" class="chevron" aria-hidden="true" />}
           </a>
           {children && (
             <>
-              <button class="toggle" type="button" aria-expanded="false" aria-controls={flyoutId}>
-                <Icon name="tabler:chevron-right" class="chevron" aria-hidden="true" />
-                <span class="visually-hidden">{label} pages</span>
-              </button>
               <div class="flyout" id={flyoutId}>
                 <ul class="panel">
                   {children.map((child) => (
@@ -67,7 +64,7 @@ function current(href: string, exact = false) {
 <script>
   const nav = document.querySelector<HTMLElement>('.main-nav');
   const items = [...(nav?.querySelectorAll<HTMLElement>('.has-flyout') ?? [])];
-  const toggleOf = (item: HTMLElement) => item.querySelector<HTMLButtonElement>('.toggle')!;
+  const triggerOf = (item: HTMLElement) => item.querySelector<HTMLAnchorElement>('.trigger')!;
   const flyoutOf = (item: HTMLElement) => item.querySelector<HTMLElement>('.flyout')!;
 
   // Lets a long flyout scroll instead of running off the bottom of the viewport.
@@ -78,7 +75,7 @@ function current(href: string, exact = false) {
 
   function setOpen(item: HTMLElement, open: boolean) {
     item.classList.toggle('open', open);
-    toggleOf(item).setAttribute('aria-expanded', String(open));
+    triggerOf(item).setAttribute('aria-expanded', String(open));
     if (open) fit(item);
   }
 
@@ -95,7 +92,20 @@ function current(href: string, exact = false) {
   nav?.classList.add('enhanced');
 
   for (const item of items) {
-    toggleOf(item).addEventListener('click', () => {
+    // The section link opens its flyout instead of navigating; the flyout's first link goes to the section page.
+    const trigger = triggerOf(item);
+    trigger.setAttribute('role', 'button');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-controls', flyoutOf(item).id);
+
+    trigger.addEventListener('keydown', (event) => {
+      if (event.key !== ' ') return;
+      event.preventDefault();
+      trigger.click();
+    });
+
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
       closeOthers(item);
       if (item.classList.contains('open')) {
         dismiss(item);
@@ -105,7 +115,7 @@ function current(href: string, exact = false) {
       }
     });
 
-    // Hover is CSS-only; these keep it in step with flyouts opened by the toggle.
+    // Hover is CSS-only; these keep it in step with flyouts opened by the link.
     item.addEventListener('pointerenter', (event) => {
       if (event.pointerType !== 'mouse') return;
       closeOthers(item);
@@ -129,7 +139,7 @@ function current(href: string, exact = false) {
       if (!item.classList.contains('open') && !item.matches(':hover')) continue;
       const hadFocus = flyoutOf(item).contains(document.activeElement);
       dismiss(item);
-      if (hadFocus) toggleOf(item).focus();
+      if (hadFocus) triggerOf(item).focus();
     }
   });
 
@@ -151,7 +161,7 @@ function current(href: string, exact = false) {
 
   .list {
     display: flex;
-    gap: 0.125rem;
+    gap: 0.25rem;
     overflow-x: auto;
   }
 
@@ -176,6 +186,12 @@ function current(href: string, exact = false) {
 
   .link:hover {
     text-decoration: underline;
+  }
+
+  /* Top-level links are always faintly outlined in their section colour;
+     current, hovered and open links use the full colour. */
+  :where(.item) > .link {
+    border-color: color-mix(in oklch, var(--color-section) 40%, transparent);
   }
 
   /* Each item, and its flyout, uses its own section's colours (data-section
@@ -203,18 +219,27 @@ function current(href: string, exact = false) {
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .link,
-    .toggle {
+    .link {
       transition:
         background-color 0.15s ease,
         border-color 0.15s ease,
         color 0.15s ease;
     }
+
+    /* The same boop as the social badges (SocialLink.astro). */
+    .link:is(:hover, :focus-visible) .icon {
+      animation: boop 0.4s ease-in-out;
+    }
+  }
+
+  @keyframes boop {
+    50% {
+      transform: rotate(12deg) scale(1.24);
+    }
   }
 
   /* Inset so the outline isn't clipped by the scrolling list. */
-  .link:focus-visible,
-  .toggle:focus-visible {
+  .link:focus-visible {
     outline-offset: -2px;
   }
 
@@ -246,41 +271,32 @@ function current(href: string, exact = false) {
     }
   }
 
-  /* Hidden, but still taking up its space, until the script makes it work. */
-  .toggle {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 1.75rem;
-    min-height: 2.75rem;
-    padding: 0;
-    border: 1px solid transparent;
-    border-radius: 0.5rem;
-    background: none;
-    color: inherit;
-    cursor: pointer;
-    visibility: hidden;
-  }
-
-  .enhanced .toggle {
-    visibility: visible;
-  }
-
-  .toggle:is(:hover, :focus-visible),
-  .toggle[aria-expanded='true'] {
+  /* A section stays highlighted while its flyout is open or pointed at. */
+  .link[aria-expanded='true'],
+  .item:hover > .trigger {
     border-color: var(--color-section);
-  }
-
-  .toggle:is(:hover, :focus-visible) {
     background: var(--color-section-tint);
     color: var(--color-section-strong);
   }
 
-  /* Points down on mobile, right on desktop. */
+  .link[aria-expanded='true'] .icon,
+  .item:hover > .trigger .icon {
+    color: var(--color-section);
+  }
+
+  /* Points down on mobile, right on desktop. Hidden, but still taking up its
+     space, until the script makes the link open the flyout. */
   .chevron {
+    flex-shrink: 0;
     width: 1.25em;
     height: 1.25em;
+    margin-inline-start: auto;
     transform: rotate(90deg);
+    visibility: hidden;
+  }
+
+  .enhanced .chevron {
+    visibility: visible;
   }
 
   /* Positioned against the sticky sidebar on mobile, so the scrolling row doesn't clip it.
@@ -325,7 +341,7 @@ function current(href: string, exact = false) {
   @media (min-width: 48rem) {
     .list {
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.375rem;
       overflow-x: visible;
     }
 
@@ -337,12 +353,7 @@ function current(href: string, exact = false) {
       padding-inline: 0.75rem;
     }
 
-    .toggle {
-      width: 2.75rem;
-    }
-
-    .icon,
-    .chevron {
+    .icon {
       display: block;
     }
 
