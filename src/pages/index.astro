@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import PostList from '../components/writing/PostList.astro';
 import ProjectCard from '../components/projects/ProjectCard.astro';
 import IntroImage from '../components/ui/IntroImage.astro';
@@ -40,13 +41,13 @@ const recentPosts = (await getPosts()).slice(0, 5);
     ) : (
       <p>Coming soon…</p>
     )}
-    <p><a href="/projects/">All projects</a></p>
+    <p><a class="more" href="/projects/">All projects<Icon name="tabler:chevrons-right" class="more-icon" aria-hidden="true" /></a></p>
   </section>
 
   <section aria-labelledby="notebook" data-section="writing">
     <h2 id="notebook">From the notebook</h2>
     <PostList posts={recentPosts} showCategory />
-    <p><a href="/writing/">All writing</a></p>
+    <p><a class="more" href="/writing/">All writing<Icon name="tabler:chevrons-right" class="more-icon" aria-hidden="true" /></a></p>
   </section>
 </BaseLayout>
 
@@ -76,6 +77,23 @@ const recentPosts = (await getPosts()).slice(0, 5);
 
   h2 {
     margin-top: 0;
+  }
+
+  .more-icon {
+    width: 1em;
+    height: 1em;
+    margin-inline-start: 0.25em;
+    vertical-align: -0.125em;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .more-icon {
+      transition: transform 150ms ease;
+    }
+
+    .more:is(:hover, :focus-visible) .more-icon {
+      transform: translateX(0.2em);
+    }
   }
 
   .projects {
