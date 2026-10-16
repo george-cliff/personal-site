@@ -1,21 +1,72 @@
-﻿<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>George Cliff</title>
-  </head>
-  <body>
-    <h1>George Cliff</h1>
+---
+import PostList from '../components/devlog/PostList.astro';
+import ProjectCard from '../components/projects/ProjectCard.astro';
+import { featuredProjects } from '../data/projects';
+import { site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getDevlogPosts } from '../lib/devlog';
 
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a href="/about/">About</a></li>
-        <li><a href="/projects/">Projects</a></li>
-        <li><a href="/devlog/">Devlog</a></li>
-        <li><a href="/interests/">Interests</a></li>
-        <li><a href="/cv/">CV</a></li>
-        <li><a href="/contact/">Contact</a></li>
+const featured = featuredProjects.slice(0, 2);
+const recentPosts = (await getDevlogPosts()).slice(0, 5);
+---
+
+<BaseLayout title={site.name}>
+  <h1>Welcome</h1>
+  <p class="intro">
+    Welcome to my corner of the internet! Here you can check out
+    my <a href="/projects/">projects</a> and <a href="/devlog/">writing</a> (both
+    technical and casual), and feel free to <a href="/contact/">reach out</a>.
+  </p>
+
+  <section aria-labelledby="workbench">
+    <h2 id="workbench">On the workbench</h2>
+    {featured.length > 0 ? (
+      <ul class="projects">
+        {featured.map((project) => (
+          <li>
+            <ProjectCard {...project} />
+          </li>
+        ))}
       </ul>
-    </nav>
-  </body>
-</html>
+    ) : (
+      <p>No featured projects yet.</p>
+    )}
+    <p><a href="/projects/">All projects</a></p>
+  </section>
+
+  <section aria-labelledby="notebook">
+    <h2 id="notebook">From the notebook</h2>
+    <PostList posts={recentPosts} />
+    <p><a href="/devlog/">All Devlog posts</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    max-width: 40rem;
+  }
+
+  section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+
+  .projects {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .projects {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

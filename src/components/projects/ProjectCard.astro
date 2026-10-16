@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../../data/projects';
+
+type Props = Project;
+
+const { title, description, href, image, meta } = Astro.props;
+---
+
+<!-- The title link stretches over the whole card; the image is moved above it visually only. -->
+<article class="card">
+  <h3><a href={href}>{title}</a></h3>
+  <p>{description}</p>
+  {meta && meta.length > 0 && (
+    <ul class="meta">
+      {meta.map((item) => <li>{item}</li>)}
+    </ul>
+  )}
+  {image && <Image class="media" src={image.src} alt={image.alt} width={800} />}
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  .card:has(a:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    text-underline-offset: 0.2em;
+  }
+
+  a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  a:focus-visible {
+    outline: none;
+  }
+
+  .card:hover a {
+    text-decoration: underline;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  .media {
+    order: -1;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+</style>
