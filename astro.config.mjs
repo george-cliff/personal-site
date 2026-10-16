@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 
 export default defineConfig({
-  site: 'https://george-cliff.github.io',
+  site: 'https://georgecliff.com',
   integrations: [
     expressiveCode(),
     mdx(),
