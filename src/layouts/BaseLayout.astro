@@ -26,15 +26,17 @@ const pageTitle = title === site.name ? site.name : `${site.name} / ${title}`;
     <title>{pageTitle}</title>
     {description && <meta name="description" content={description} />}
     <script is:inline>
-      // colours.css themes from data-theme. Restore a saved choice before first
-      // paint, then mirror the header's DarkMode toggle, which stores 'darkMode'
-      // and announces changes. With nothing saved, the OS preference applies.
+      // colours.css themes from data-theme. Before first paint, apply the saved
+      // choice, or dark by default; then mirror the header's DarkMode toggle,
+      // which stores 'darkMode' and announces changes. Without JavaScript,
+      // colours.css falls back to the OS preference.
       (() => {
         const apply = (dark) => document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        let saved = null;
         try {
-          const saved = localStorage.getItem('darkMode');
-          if (saved) apply(saved === 'enabled');
+          saved = localStorage.getItem('darkMode');
         } catch {}
+        apply(saved ? saved === 'enabled' : true);
         document.addEventListener('darkmode:change', (event) => apply(event.detail.enabled));
       })();
     </script>

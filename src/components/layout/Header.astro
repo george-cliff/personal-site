@@ -39,23 +39,13 @@ import { launcherId } from './navigation';
   <div class="actions">
     <LauncherTrigger launcherId={launcherId} iconOnly aria-keyshortcuts="Control+K Meta+K" />
 
-    <DarkMode initialMode="auto" label="Dark mode">
+    <!-- Dark by default; the toggle's choice is remembered. -->
+    <DarkMode initialMode="dark" label="Dark mode">
       <Icon slot="light" name="tabler:sun" aria-hidden="true" />
       <Icon slot="dark" name="tabler:moon" aria-hidden="true" />
     </DarkMode>
   </div>
 </div>
-
-<script>
-  // DarkMode only reads the system preference on load. While no manual
-  // choice is stored (auto mode), follow live system changes too.
-  const darkMode = (window as any).darkMode;
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (localStorage.getItem('darkMode')) return;
-    e.matches ? darkMode.enable() : darkMode.disable();
-    localStorage.removeItem('darkMode');
-  });
-</script>
 
 <style>
   /* Up to wide desktop: identity on top, social links and actions below. Wide: one row. */
