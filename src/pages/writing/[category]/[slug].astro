@@ -1,0 +1,78 @@
+---
+import { render } from 'astro:content';
+import FormattedDate from '../../../components/ui/FormattedDate.astro';
+import { projects, projectUrl } from '../../../data/projects';
+import { categories, categoryUrl } from '../../../data/writing';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getPosts } from '../../../lib/writing';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+
+  return posts.map((post) => ({
+    params: { category: post.data.category, slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, image, imageAlt } = post.data;
+const category = categories[post.data.category];
+const project = projects.find(({ id }) => id === post.data.project);
+const { Content } = await render(post);
+---
+
+<BaseLayout title={title} description={description}>
+  <a href={categoryUrl(post.data.category)}>Back to {category.label}</a>
+  <h1>{title}</h1>
+
+  <ul class="meta">
+    <li><a href={categoryUrl(post.data.category)}>{category.label}</a></li>
+    <li><FormattedDate date={pubDate} /></li>
+    {updatedDate && <li>Updated <FormattedDate date={updatedDate} /></li>}
+    {project && <li>Part of <a href={projectUrl(project)}>{project.title}</a></li>}
+  </ul>
+
+  {tags.length > 0 && (
+    <ul class="tags" aria-label="Tags">
+      {tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+  )}
+
+  <article>
+    {image && <img class="image" src={image} alt={imageAlt} />}
+    <Content />
+  </article>
+</BaseLayout>
+
+<style>
+  .meta,
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  .meta a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+  }
+
+  .tags li {
+    padding-inline: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+
+  .image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+</style>

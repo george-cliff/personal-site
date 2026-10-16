@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import PostList from '../../components/writing/PostList.astro';
+import { projects } from '../../data/projects';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts } from '../../lib/writing';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, description, image, meta } = project;
+// Articles whose `project` frontmatter is this project's id.
+const related = (await getPosts()).filter((post) => post.data.project === project.id);
+---
+
+<BaseLayout title={title} description={description}>
+  <a href="/projects/">Back to projects</a>
+  <h1>{title}</h1>
+
+  {meta && meta.length > 0 && (
+    <ul class="meta">
+      {meta.map((item) => <li>{item}</li>)}
+    </ul>
+  )}
+
+  <p class="intro">{description}</p>
+  {image && <Image class="image" src={image.src} alt={image.alt} width={1200} />}
+
+  {related.length > 0 && (
+    <section aria-labelledby="related-writing">
+      <h2 id="related-writing">Related writing</h2>
+      <PostList posts={related} showCategory />
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  .intro {
+    max-width: 40rem;
+  }
+
+  .image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+</style>

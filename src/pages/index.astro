@@ -1,20 +1,20 @@
 ---
-import PostList from '../components/devlog/PostList.astro';
+import PostList from '../components/writing/PostList.astro';
 import ProjectCard from '../components/projects/ProjectCard.astro';
 import { featuredProjects } from '../data/projects';
 import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getDevlogPosts } from '../lib/devlog';
+import { getPosts } from '../lib/writing';
 
 const featured = featuredProjects.slice(0, 2);
-const recentPosts = (await getDevlogPosts()).slice(0, 5);
+const recentPosts = (await getPosts()).slice(0, 5);
 ---
 
 <BaseLayout title={site.name}>
   <h1>Welcome</h1>
   <p class="intro">
     Welcome to my corner of the internet! Here you can check out
-    my <a href="/projects/">projects</a> and <a href="/devlog/">writing</a> (both
+    my <a href="/projects/">projects</a> and <a href="/writing/">writing</a> (both
     technical and casual). The site is still evolving as I learn and
     experiment, so check back often, and feel free
     to <a href="/contact/">reach out</a> if anything looks broken or you just
@@ -32,15 +32,15 @@ const recentPosts = (await getDevlogPosts()).slice(0, 5);
         ))}
       </ul>
     ) : (
-      <p>No featured projects yet.</p>
+      <p>Coming soon…</p>
     )}
     <p><a href="/projects/">All projects</a></p>
   </section>
 
   <section aria-labelledby="notebook">
     <h2 id="notebook">From the notebook</h2>
-    <PostList posts={recentPosts} />
-    <p><a href="/devlog/">All Devlog posts</a></p>
+    <PostList posts={recentPosts} showCategory />
+    <p><a href="/writing/">All writing</a></p>
   </section>
 </BaseLayout>
 

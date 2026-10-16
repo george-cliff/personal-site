@@ -1,0 +1,79 @@
+---
+import PostList from '../../components/writing/PostList.astro';
+import { categories, categoryIds, categoryUrl, type Category } from '../../data/writing';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts } from '../../lib/writing';
+
+// /writing/ lists every category; /writing/<category>/ lists one.
+export function getStaticPaths() {
+  return [undefined, ...categoryIds].map((category) => ({ params: { category } }));
+}
+
+const category = Astro.params.category as Category | undefined;
+const posts = await getPosts(category);
+
+const title = category ? categories[category].label : 'Writing';
+// Category descriptions live in src/data/writing.ts; replace `undefined` to describe /writing/ itself.
+const description = category ? categories[category].description : undefined;
+const filters = [
+  { label: 'All', href: '/writing/', current: !category },
+  ...categoryIds.map((id) => ({
+    label: categories[id].label,
+    href: categoryUrl(id),
+    current: id === category,
+  })),
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <h1>{title}</h1>
+  <p class="intro">{description ?? 'Description coming soon…'}</p>
+
+  <nav aria-label="Writing categories">
+    <ul class="filters">
+      {filters.map(({ label, href, current }) => (
+        <li>
+          <a href={href} aria-current={current ? 'page' : undefined}>{label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <PostList posts={posts} showCategory={!category} />
+</BaseLayout>
+
+<style>
+  .intro {
+    max-width: 40rem;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.5rem 0 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .filters a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: inherit;
+    text-decoration: none;
+    text-underline-offset: 0.2em;
+  }
+
+  .filters a:hover {
+    text-decoration: underline;
+  }
+
+  .filters a[aria-current] {
+    border-color: currentColor;
+    font-weight: bold;
+  }
+</style>

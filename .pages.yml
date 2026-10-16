@@ -2,19 +2,47 @@ media:
   input: public/images
   output: /images
 
+# Keep these fields in step with the schema in src/content.config.ts.
 content:
-  - name: devlog
-    label: Devlog
+  - name: writing
+    label: Writing
     type: collection
-    path: src/content/devlog
+    path: src/content/writing
     format: yaml-frontmatter
     filename: "{primary}.md"
     fields:
       - name: title
         type: string
         required: true
+      - name: description
+        type: text
+        required: true
       - name: pubDate
         label: Publication date
         type: date
+        required: true
+      - name: updatedDate
+        label: Updated date
+        type: date
+      - name: category
+        type: select
+        required: true
+        options:
+          values: [devlog, notes, hobbies]
+      - name: tags
+        type: string
+        list: true
+      - name: project
+        label: Project id
+        description: The id of a project in src/data/projects.ts
+        type: string
+      - name: image
+        type: image
+      - name: imageAlt
+        label: Image description
+        type: string
+      - name: draft
+        type: boolean
+        default: false
       - name: body
         type: rich-text
