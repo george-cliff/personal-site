@@ -4,10 +4,10 @@ import type { SocialLink } from '../../data/site';
 
 type Props = SocialLink;
 
-const { label, href, icon } = Astro.props;
+const { label, href, icon, brand } = Astro.props;
 ---
 
-<a class="badge" href={href}>
+<a class="badge" href={href} data-brand={brand}>
   <Icon name={icon} class="icon" aria-hidden="true" />
   <span class="label">{label}</span>
 </a>
@@ -24,8 +24,26 @@ const { label, href, icon } = Astro.props;
     padding-inline: 1rem;
     border: 1px solid;
     border-radius: 999px;
-    color: inherit;
+    color: var(--badge-color, inherit);
     text-decoration: none;
+  }
+
+  /* Each badge's own colour; all turn Rose on hover and focus. */
+  .badge[data-brand='github'] {
+    --badge-color: var(--color-social-github);
+  }
+
+  .badge[data-brand='linkedin'] {
+    --badge-color: var(--color-social-linkedin);
+  }
+
+  .badge[data-brand='email'] {
+    --badge-color: var(--color-social-email);
+  }
+
+  .badge:is(:hover, :focus-visible) {
+    color: var(--color-accent-rose);
+    background: var(--color-accent-rose-tint);
   }
 
   .badge:hover {
@@ -39,6 +57,13 @@ const { label, href, icon } = Astro.props;
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    .badge {
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+    }
+
     .badge:is(:hover, :focus-visible) .icon {
       animation: boop 0.4s ease-in-out;
     }

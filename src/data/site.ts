@@ -12,12 +12,14 @@ export interface SocialLink {
   href: string;
   /** Tabler icon name, e.g. 'tabler:brand-github'. */
   icon: string;
+  /** Badge colour (see --color-social-* in src/styles/colours.css). Others use the text colour. */
+  brand?: 'github' | 'linkedin' | 'email';
 }
 
 // Only list links that are ready to publish, e.g.
 // { label: 'RSS', href: '/rss.xml', icon: 'tabler:rss' },
 export const socialLinks: SocialLink[] = [
-  { label: 'GitHub', href: 'https://github.com/george-cliff', icon: 'tabler:brand-github' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/george-cliff/', icon: 'tabler:brand-linkedin' },
-  { label: 'Email', href: 'mailto:gcliff@fastmail.com', icon: 'tabler:mail' },
+  { label: 'GitHub', href: 'https://github.com/george-cliff', icon: 'tabler:brand-github', brand: 'github' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/george-cliff/', icon: 'tabler:brand-linkedin', brand: 'linkedin' },
+  { label: 'Email', href: 'mailto:gcliff@fastmail.com', icon: 'tabler:mail', brand: 'email' },
 ];
